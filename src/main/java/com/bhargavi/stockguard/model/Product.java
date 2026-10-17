@@ -1,9 +1,6 @@
 package com.bhargavi.stockguard.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Product {
@@ -13,6 +10,9 @@ public class Product {
     private String name;
     private Integer stock;
     private Double price;
+
+    @Version                    // ← add this
+    private Integer version;
 
     public Long getId() {
         return id;
@@ -44,5 +44,13 @@ public class Product {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 }

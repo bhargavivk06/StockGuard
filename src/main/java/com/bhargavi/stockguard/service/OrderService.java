@@ -5,6 +5,7 @@ import com.bhargavi.stockguard.model.Product;
 import com.bhargavi.stockguard.repo.OrderRepo;
 import com.bhargavi.stockguard.repo.ProductRepo;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -17,12 +18,13 @@ public class OrderService {
         this.orderRepo = orderRepo;
         this.productRepo = productRepo;
     }
-
+    @Transactional
     public Order placeOrder(Long productId, Integer quantity) {
-        Product product = productRepo.findById(productId).orElseThrow(() -> new RuntimeException("Product not found"));
+        Product product = productRepo.findByIdWithLock(productId).orElseThrow(() -> new RuntimeException("Product not found"));
         if (product.getStock() < quantity) {
             throw new RuntimeException("Not enough stock");
         }
+
 
         product.setStock(product.getStock() - quantity);
         productRepo.save(product);
